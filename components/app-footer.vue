@@ -3,7 +3,13 @@
 </script>
 
 <template>
-  <footer class="container mx-auto p-4 text-center text-xs text-gray">2024-Present © Fake Store</footer>
+  <footer class="py-4">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between">
+        <span class="text-xs text-gray-500">2024-Present © Fake Store</span>
+      </div>
+    </div>
+  </footer>
 </template>
 
 <style scoped>
