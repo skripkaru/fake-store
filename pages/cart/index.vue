@@ -7,9 +7,9 @@ const router = useRouter()
 </script>
 
 <template>
-  <div class="container mx-auto">
+  <div class="container mx-auto px-4">
     <div v-if="items.length" class="flex h-full flex-col overflow-y-scroll">
-      <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+      <div class="flex-1 overflow-y-auto">
         <h2 class="text-2xl font-medium text-gray-900">Shopping cart</h2>
         <div class="my-8">
           <div class="flow-root">
