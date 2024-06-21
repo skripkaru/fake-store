@@ -1,22 +1,12 @@
 <script setup lang="ts">
-import {storeToRefs} from 'pinia';
-import {useAuthStore} from '~/store/auth';
-
-const {authenticateUser} = useAuthStore();
-const {authenticated, error} = storeToRefs(useAuthStore());
-
 const user = ref({
   username: '',
   password: '',
 });
 const router = useRouter();
 
-const login = async () => {
-  await authenticateUser(user.value);
-
-  if (authenticated) {
-    await router.push('/');
-  }
+const register = async () => {
+  await router.push('/login');
 };
 
 </script>
@@ -24,8 +14,8 @@ const login = async () => {
 <template>
   <div class="flex min-h-full flex-col justify-center container mx-auto px-4">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h1 class="mb-8 text-center text-2xl font-semibold text-gray-900">Sign in to your account</h1>
-      <form class="space-y-6" @submit.prevent="login">
+      <h1 class="mb-8 text-center text-2xl font-semibold text-gray-900">Sign up your account</h1>
+      <form class="space-y-6" @submit.prevent="register">
         <ui-input
           v-model="user.username"
           id="username"
@@ -44,13 +34,12 @@ const login = async () => {
           placeholder="Enter your password"
           autocomplete="current-password"
         />
-        <ui-button>Sign in</ui-button>
+        <ui-button>Sign up</ui-button>
         <p class="mt-10 text-center text-sm text-gray-500">
-          Don't have an account?
-          <nuxt-link to="/register" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign up</nuxt-link>
+          Already have an account?
+          <nuxt-link to="/login" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign in</nuxt-link>
         </p>
       </form>
-      <p v-if="error" class="text-red-500 mt-3">{{ error }}</p>
     </div>
   </div>
 </template>

@@ -16,7 +16,7 @@ const addToCart = (product: IProduct) => {
 
 <template>
   <div v-if="products" class="container mx-auto px-4">
-    <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4 sm:gap-4 lg:gap-6">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 sm:gap-6 xl:gap-8">
       <product-card
         v-for="product in products"
         :key="product.id"

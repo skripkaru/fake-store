@@ -4,8 +4,8 @@
 
 <template>
   <nuxt-link class="text-xl font-semibold text-indigo-500 sm:text-2xl" to="/">
-    Fake Store
-    <span class="sr-only">Fake Store</span>
+    Fake Shop
+    <span class="sr-only">Fake Shop</span>
   </nuxt-link>
 </template>
 
