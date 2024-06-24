@@ -13,12 +13,12 @@ const {items, totalPrice} = storeToRefs(cartStore)
       error-text="Oops"
       title="Your cart is empty"
       description="Browse our catalog and add some items to your cart."
-      link="/products"
+      link="/"
       label="Go to catalog"
     />
     <div v-if="items.length" class="flex h-full flex-col overflow-y-scroll">
       <div class="flex-1 overflow-y-auto">
-        <h1 class="text-2xl font-semibold text-gray-900">Shopping cart</h1>
+        <h1 class="heading-1">Shopping cart</h1>
         <ul role="list" class="my-6 divide-y divide-gray-200">
           <li v-for="item in items" :key="item.id" class="flex py-6">
             <nuxt-link :to="`/products/${item.id}`" class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
@@ -37,7 +37,7 @@ const {items, totalPrice} = storeToRefs(cartStore)
               <div class="flex flex-1 items-end justify-between text-sm">
                 <p class="text-gray-500">Quantity: {{ item.quantity }}</p>
                 <div class="flex">
-                  <button @click="removeItem(item.id)" type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+                  <button @click="removeItem(item.id)" class="link">Remove</button>
                 </div>
               </div>
             </div>

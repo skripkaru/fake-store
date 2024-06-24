@@ -1,21 +1,19 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 import type {IProduct} from "~/types";
 
 export const useCartStore = defineStore('cart', () => {
   const items = ref<IProduct[]>([])
 
   const addItem = (product: IProduct) => {
-    console.log('Added to cart:', product)
     const existingItem = items.value.find(item => item.id === product.id)
     if (existingItem) {
       existingItem.quantity!++
     } else {
-      items.value.push({ ...product, quantity: 1 })
+      items.value.push({...product, quantity: 1})
     }
   }
 
   const removeItem = (productId: number) => {
-    console.log('Removed from cart:', productId)
     items.value = items.value.filter(item => item.id !== productId)
   }
 
@@ -34,4 +32,8 @@ export const useCartStore = defineStore('cart', () => {
     removeItem,
     clearCart,
   }
+}, {
+  persist: {
+    storage: persistedState.localStorage,
+  },
 })

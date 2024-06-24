@@ -3,8 +3,8 @@ interface IProps {
   errorText?: string
   title: string
   description?: string
-  link: string
-  label: string
+  link?: string
+  label?: string
 }
 
 defineProps<IProps>()
@@ -14,7 +14,7 @@ defineProps<IProps>()
   <div class="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
     <div class="text-center">
       <p v-if="errorText" class="text-base font-semibold text-indigo-600">{{ errorText }}</p>
-      <h1 class="mt-4 text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">{{ title }}</h1>
+      <h1 class="mt-4 heading-1">{{ title }}</h1>
       <p v-if="description" class="mt-6 text-base leading-7 text-gray-600">{{ description }}</p>
       <div v-if="link" class="mt-10 flex items-center justify-center gap-x-6">
         <nuxt-link

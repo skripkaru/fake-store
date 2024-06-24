@@ -6,8 +6,8 @@ const {authenticateUser} = useAuthStore();
 const {authenticated, error} = storeToRefs(useAuthStore());
 
 const user = ref({
-  username: '',
-  password: '',
+  username: 'emilys',
+  password: 'emilyspass',
 });
 const router = useRouter();
 
@@ -24,7 +24,7 @@ const login = async () => {
 <template>
   <div class="flex min-h-full flex-col justify-center container mx-auto px-4">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h1 class="mb-8 text-center text-2xl font-semibold text-gray-900">Sign in to your account</h1>
+      <h1 class="mb-8 text-center heading-1">Sign in to your account</h1>
       <form class="space-y-6" @submit.prevent="login">
         <ui-input
           v-model="user.username"
@@ -33,7 +33,6 @@ const login = async () => {
           name="username"
           label="Name"
           placeholder="Enter your name"
-          autocomplete="username"
         />
         <ui-input
           v-model="user.password"
@@ -42,13 +41,12 @@ const login = async () => {
           name="password"
           label="Password"
           placeholder="Enter your password"
-          autocomplete="current-password"
         />
         <ui-button>Sign in</ui-button>
-        <p class="mt-10 text-center text-sm text-gray-500">
-          Don't have an account?
-          <nuxt-link to="/register" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign up</nuxt-link>
-        </p>
+<!--        <p class="mt-10 text-center text-sm text-gray-500">-->
+<!--          Don't have an account?-->
+<!--          <nuxt-link to="/register" class=" link">Sign up</nuxt-link>-->
+<!--        </p>-->
       </form>
       <p v-if="error" class="text-red-500 mt-3">{{ error }}</p>
     </div>
