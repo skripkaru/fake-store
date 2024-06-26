@@ -56,7 +56,7 @@ export const useProductStore = defineStore('product', () => {
   const fetchCategories = async () => {
     try {
       pending.value = true
-      const response = await $fetch<ICategory[]>('/api/products/categories')
+      const response = await $fetch<ICategory[]>('https://dummyjson.com/products/categories')
 
       if (response) {
         categories.value = response
