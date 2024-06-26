@@ -29,25 +29,17 @@ export const useAuthStore = defineStore('auth', () => {
     if (data.value) {
       const token = useCookie<string>('token');
       token.value = data.value.token;
-      console.log("Token set:", token.value);
       authenticated.value = true;
       await getCurrentUser(); // Fetch current user after login
     } else if (err.value) {
-      console.log("Login error:", err.value);
       error.value = err.value;
     }
   };
 
   const getCurrentUser = async () => {
     const token = useCookie<string>('token');
-    console.log("Token retrieved:", token.value);
     if (!token.value) {
-      console.log("Token not found");
       return
-    }
-
-    if(token.value) {
-      console.log("Token:", token.value);
     }
 
     const {data, error: err} = await useFetch<IUser>('https://dummyjson.com/auth/me', {
@@ -57,14 +49,9 @@ export const useAuthStore = defineStore('auth', () => {
       },
     }) as FetchResult<IUser>;
 
-    console.log("Fetch result data:", data.value);
-    console.log("Fetch result error:", err.value);
-
     if (data.value) {
-      console.log("User data:", data.value);
       user.value = data.value;
     } else if (err.value) {
-      console.log("Error:", err.value);
       error.value = err.value;
     }
   };

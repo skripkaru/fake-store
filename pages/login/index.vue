@@ -43,10 +43,6 @@ const login = async () => {
           placeholder="Enter your password"
         />
         <ui-button>Sign in</ui-button>
-<!--        <p class="mt-10 text-center text-sm text-gray-500">-->
-<!--          Don't have an account?-->
-<!--          <nuxt-link to="/register" class=" link">Sign up</nuxt-link>-->
-<!--        </p>-->
       </form>
       <p v-if="error" class="text-red-500 mt-3">{{ error }}</p>
     </div>

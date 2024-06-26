@@ -1,7 +1,7 @@
 import axios from "axios";
 import {ICategory} from "~/types";
 
-export default defineEventHandler(async (event): Promise<ICategory[]> => {
+export default defineEventHandler(async (): Promise<ICategory[]> => {
   let url = `${process.env.API_BASE_URL}/products/categories`
 
   try {

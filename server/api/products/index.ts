@@ -13,7 +13,7 @@ export default defineEventHandler(async (event): Promise<IProductResponse> => {
   let url = `https://dummyjson.com/products`;
 
   if (searchQuery) {
-    url += `/search?${searchQuery}${sortQuery}${orderQuery}${limitQuery}${skipQuery}`;
+    url += `?${searchQuery}${sortQuery}${orderQuery}${limitQuery}${skipQuery}`;
   } else {
     url += `?${sortQuery}${orderQuery}${limitQuery}${skipQuery}`;
   }
@@ -26,3 +26,5 @@ export default defineEventHandler(async (event): Promise<IProductResponse> => {
     throw new Error("Failed to fetch products");
   }
 });
+
+
