@@ -12,12 +12,15 @@ interface FetchResult<T> {
 }
 
 export const useAuthStore = defineStore('auth', () => {
+  const config = useRuntimeConfig()
+  const apiUrl = config.public.apiBase
+
   const authenticated = ref<boolean>(false);
   const error = ref<any>(null);
   const user = ref<IUser | null>(null);
 
   const authenticateUser = async ({username, password}: UserPayloadInterface) => {
-    const {data, error: err} = await useFetch<any>(`${process.env.API_BASE_URL}/auth/login`, {
+    const {data, error: err} = await useFetch<any>(`${apiUrl}/auth/login`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({

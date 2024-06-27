@@ -2,7 +2,8 @@ import {defineStore} from 'pinia'
 import type {ICategory, IProduct, IProductResponse} from "~/types";
 
 export const useProductStore = defineStore('product', () => {
-  const config = useRuntimeConfig();
+  const config = useRuntimeConfig()
+  const apiUrl = config.public.apiBase
   
   // State
   const searchQuery = ref<string>('')
@@ -25,7 +26,7 @@ export const useProductStore = defineStore('product', () => {
     try {
       pending.value = true
 
-      let endpoint = `${config.public.API_BASE_URL}/products`
+      let endpoint = `${apiUrl}/products`
 
       const params: Record<string, any> = {
         q: searchQuery.value,
@@ -36,11 +37,11 @@ export const useProductStore = defineStore('product', () => {
       }
 
       if (searchQuery.value) {
-        endpoint = `${config.public.API_BASE_URL}/products/search`
+        endpoint = `${apiUrl}/products/search`
       }
 
       if (selectedCategory.value) {
-        endpoint = `${config.public.API_BASE_URL}/products/category/${selectedCategory.value}`
+        endpoint = `${apiUrl}/products/category/${selectedCategory.value}`
       }
 
       const response = await $fetch<IProductResponse>(endpoint, {params})
@@ -59,7 +60,7 @@ export const useProductStore = defineStore('product', () => {
   const fetchCategories = async () => {
     try {
       pending.value = true
-      const response = await $fetch<ICategory[]>(`${config.public.API_BASE_URL}/products/categories`)
+      const response = await $fetch<ICategory[]>(`${apiUrl}/products/categories`)
 
       if (response) {
         categories.value = response
@@ -81,7 +82,7 @@ export const useProductStore = defineStore('product', () => {
     try {
       pending.value = true
 
-      const response = await $fetch<IProduct>(`${config.public.API_BASE_URL}/products/${id}`)
+      const response = await $fetch<IProduct>(`${apiUrl}/products/${id}`)
 
       if (response) {
         product.value = response
