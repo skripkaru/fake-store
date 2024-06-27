@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref<IUser | null>(null);
 
   const authenticateUser = async ({username, password}: UserPayloadInterface) => {
-    const {data, error: err} = await useFetch<any>('https://dummyjson.com/auth/login', {
+    const {data, error: err} = await useFetch<any>(`${process.env.API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -42,7 +42,7 @@ export const useAuthStore = defineStore('auth', () => {
       return
     }
 
-    const {data, error: err} = await useFetch<IUser>('https://dummyjson.com/auth/me', {
+    const {data, error: err} = await useFetch<IUser>(`${process.env.API_BASE_URL}/auth/me`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token.value}`,

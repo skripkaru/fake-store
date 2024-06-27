@@ -1,12 +1,22 @@
 <script setup lang="ts">
-import type {IProduct} from "~/types";
 import {useCartStore} from '~/store/cart'
+import {useProductStore} from "~/store/product";
 
+const productStore = useProductStore()
+const {
+  product,
+  error,
+} = storeToRefs(productStore)
+const {fetchProduct} = productStore
 const {addItem} = useCartStore()
 
 const route = useRoute()
 
-const {data: product, error} = await useFetch<IProduct>(`/api/products/${route.params.id}`)
+onMounted(async () => {
+  await fetchProduct(route.params.id)
+})
+
+// const {data: product, error} = await useFetch<IProduct>(`${process.env.API_BASE_URL}/products/${route.params.id}`)
 </script>
 
 <template>

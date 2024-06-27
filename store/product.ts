@@ -2,6 +2,8 @@ import {defineStore} from 'pinia'
 import type {ICategory, IProduct, IProductResponse} from "~/types";
 
 export const useProductStore = defineStore('product', () => {
+  const config = useRuntimeConfig();
+  
   // State
   const searchQuery = ref<string>('')
   const selectedCategory = ref<string>('')
@@ -10,6 +12,7 @@ export const useProductStore = defineStore('product', () => {
 
   const categories = ref<ICategory[]>([])
   const products = ref<IProduct[]>([])
+  const product = ref<IProduct | null>(null)
   const pending = ref<boolean>(false)
   const error = ref<any>(null)
 
@@ -22,7 +25,7 @@ export const useProductStore = defineStore('product', () => {
     try {
       pending.value = true
 
-      let endpoint = 'https://dummyjson.com/products'
+      let endpoint = `${config.public.API_BASE_URL}/products`
 
       const params: Record<string, any> = {
         q: searchQuery.value,
@@ -33,11 +36,11 @@ export const useProductStore = defineStore('product', () => {
       }
 
       if (searchQuery.value) {
-        endpoint = `https://dummyjson.com/products/search`
+        endpoint = `${config.public.API_BASE_URL}/products/search`
       }
 
       if (selectedCategory.value) {
-        endpoint = `https://dummyjson.com/products/category/${selectedCategory.value}`
+        endpoint = `${config.public.API_BASE_URL}/products/category/${selectedCategory.value}`
       }
 
       const response = await $fetch<IProductResponse>(endpoint, {params})
@@ -56,7 +59,7 @@ export const useProductStore = defineStore('product', () => {
   const fetchCategories = async () => {
     try {
       pending.value = true
-      const response = await $fetch<ICategory[]>('https://dummyjson.com/products/categories')
+      const response = await $fetch<ICategory[]>(`${config.public.API_BASE_URL}/products/categories`)
 
       if (response) {
         categories.value = response
@@ -72,30 +75,22 @@ export const useProductStore = defineStore('product', () => {
     selectedCategory.value = slug
     page.value = 1  // Reset to first page when category changes
     await fetchProducts()
+  }
 
-    // try {
-    //   pending.value = true
-    //   const response = await $fetch<IProductResponse>(`/api/categories/${slug}`, {
-    //     params: {
-    //       q: searchQuery.value,
-    //       sortBy: selectedSort.value,
-    //       limit: limit.value,
-    //       skip: (page.value - 1) * limit.value,
-    //       order: order.value,
-    //       category: selectedCategory.value
-    //     },
-    //   })
-    //
-    //   if (response) {
-    //     products.value = response.products
-    //     totalPages.value = Math.ceil(response.total / limit.value)
-    //     selectedCategory.value = slug
-    //   }
-    // } catch (e) {
-    //   error.value = e
-    // } finally {
-    //   pending.value = false
-    // }
+  const fetchProduct = async (id: string) => {
+    try {
+      pending.value = true
+
+      const response = await $fetch<IProduct>(`${config.public.API_BASE_URL}/products/${id}`)
+
+      if (response) {
+        product.value = response
+      }
+    } catch (e) {
+      error.value = e
+    } finally {
+      pending.value = false
+    }
   }
 
   const nextPage = async () => {
@@ -120,6 +115,7 @@ export const useProductStore = defineStore('product', () => {
     selectedSort,
     order,
     products,
+    product,
     categories,
     pending,
     error,
@@ -129,6 +125,7 @@ export const useProductStore = defineStore('product', () => {
     fetchProducts,
     fetchCategories,
     fetchProductsByCategory,
+    fetchProduct,
     nextPage,
     prevPage,
   }
