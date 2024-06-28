@@ -42,7 +42,7 @@ const login = async () => {
           label="Password"
           placeholder="Enter your password"
         />
-        <ui-button>Sign in</ui-button>
+        <ui-button class="w-full">Sign in</ui-button>
       </form>
       <p v-if="error" class="text-red-500 mt-3">{{ error }}</p>
     </div>

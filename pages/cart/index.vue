@@ -47,7 +47,7 @@ const {items, totalPrice} = storeToRefs(cartStore)
         <div class="border-t border-gray-200 py-6">
           <div class="flex items-center justify-between  text-gray-900">
             <p class="text-xl font-medium">Total</p>
-            <p class="text-2xl font-semibold">${{ totalPrice }}</p>
+            <p class="text-2xl font-semibold">${{ Math.round(totalPrice) }}</p>
           </div>
         </div>
       </div>

@@ -11,7 +11,7 @@ defineProps<IProps>()
 </script>
 
 <template>
-  <div class="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
+  <div class="grid place-items-center ">
     <div class="text-center">
       <p v-if="errorText" class="text-base font-semibold text-gray-600">{{ errorText }}</p>
       <h1 class="mt-4 heading-1">{{ title }}</h1>

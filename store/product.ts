@@ -4,21 +4,19 @@ import type {ICategory, IProduct, IProductResponse} from "~/types";
 export const useProductStore = defineStore('product', () => {
   const config = useRuntimeConfig()
   const apiUrl = config.public.apiBase
-  
+
   // State
   const searchQuery = ref<string>('')
   const selectedCategory = ref<string>('')
   const selectedSort = ref<string>('')
-  const order = ref<string>('')
-
+  const order = ref<string>('asc')
   const categories = ref<ICategory[]>([])
   const products = ref<IProduct[]>([])
   const product = ref<IProduct | null>(null)
   const pending = ref<boolean>(false)
   const error = ref<any>(null)
-
   const page = ref<number>(1)
-  const limit = ref<number>(12)
+  const limit = ref<number>(9)
   const totalPages = ref<number>(0)
 
   // Actions
@@ -96,24 +94,32 @@ export const useProductStore = defineStore('product', () => {
 
   const nextPage = async () => {
     page.value++;
-    await fetchProducts();
   };
 
   const prevPage = async () => {
     if (page.value > 1) {
       page.value--;
-      await fetchProducts();
     }
   };
 
-  watch([searchQuery, selectedCategory, selectedSort, order, page], () => fetchProducts)
+  const setPage = (currentPage: number) => {
+    page.value = currentPage
+  }
+
+  const resetFilters = () => {
+    selectedCategory.value = ''
+    selectedSort.value = ''
+    order.value = ''
+  }
+
+  watch([searchQuery, selectedCategory, selectedSort, order, page], fetchProducts)
 
   // Getters
-  // const getProducts = computed(() => products.value)
 
   return {
     searchQuery,
     selectedSort,
+    selectedCategory,
     order,
     products,
     product,
@@ -129,6 +135,8 @@ export const useProductStore = defineStore('product', () => {
     fetchProduct,
     nextPage,
     prevPage,
+    setPage,
+    resetFilters,
   }
 })
 

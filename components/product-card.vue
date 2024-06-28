@@ -18,6 +18,7 @@ defineProps<{ product: IProduct }>()
       >
     </nuxt-link>
     <h3 class="mt-4 text-sm text-gray-700">{{ product.title }}</h3>
+    <p class="mt-1 text-sm font-medium text-gray-500">{{ product.brand }}</p>
     <p class="mt-1 text-lg font-medium text-gray-900">${{ product.price }}</p>
     <ui-button class="mt-4" @click="addItem(product)">Add to cart</ui-button>
   </div>

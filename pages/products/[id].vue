@@ -11,12 +11,11 @@ const {fetchProduct} = productStore
 const {addItem} = useCartStore()
 
 const route = useRoute()
+const productId = route.params.id as string
 
 onMounted(async () => {
-  await fetchProduct(route.params.id)
+  await fetchProduct(productId)
 })
-
-// const {data: product, error} = await useFetch<IProduct>(`${process.env.API_BASE_URL}/products/${route.params.id}`)
 </script>
 
 <template>
@@ -25,7 +24,7 @@ onMounted(async () => {
       <div class="aspect-square rounded">
         <img :src="product.images[0]" :alt="product.title" class="h-full w-full object-contain object-center">
       </div>
-      <div class="flex flex-col sm:pl-8 sm:border-l sm::border-gray-200">
+      <div class="flex flex-col items-start sm:pl-8 sm:border-l sm::border-gray-200">
         <h1 class="mb-4 heading-1">{{ product.title }}</h1>
         <p class="mb-2 text-base text-gray-900">{{ product.description }}</p>
         <p class="mb-8 heading-2">${{ product.price }}</p>
