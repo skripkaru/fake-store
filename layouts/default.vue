@@ -12,7 +12,7 @@ useHead({
 <template>
   <div class="h-full grid grid-rows-[auto_1fr_auto]">
     <app-header/>
-    <main class="min-w-[0] py-8 sm:py-10 lg:py-12">
+    <main class="min-w-[0]">
       <slot></slot>
     </main>
     <app-footer/>

@@ -13,15 +13,21 @@
 <!--          <nuxt-link to="/login" class="text-sm font-medium text-gray-700 hover:text-gray-800">-->
 <!--            Sign in-->
 <!--          </nuxt-link>-->
-<!--          <nuxt-link-->
-<!--            to="/cart"-->
-<!--            class="relative text-gray-400 hover:text-gray-500"-->
-<!--          >-->
-<!--            <div class="i-ph:bag-light h-6 w-6 flex-shrink-0"></div>-->
-<!--            <span-->
-<!--              class="absolute -top-2 -right-2 text-xs font-medium text-gray-700">-->
-<!--              0-->
-<!--            </span>-->
+          <nuxt-link to="/" class="link text-sm">
+            Home
+          </nuxt-link>
+          <nuxt-link to="/products" class="link text-sm">
+            Shop
+          </nuxt-link>
+
+          <div class="w-px h-5 bg-gray-200"></div>
+
+          <ui-button-icon to="/cart" class="relative">
+            <div class="i-ph:bag-light h-6 w-6 flex-shrink-0"></div>
+            <span class="absolute -top-2 -right-2 text-xs font-medium text-gray-700">
+              0
+            </span>
+          </ui-button-icon>
 <!--          </nuxt-link>-->
 <!--          <nuxt-link class=" text-gray-400 hover:text-gray-500 cursor-pointer">-->
 <!--            <div class="i-ph:sign-out-light h-6 w-6 flex-shrink-0"></div>-->

@@ -9,6 +9,7 @@ const {
 } = storeToRefs(productStore)
 const {fetchProduct} = productStore
 
+const router = useRouter()
 const route = useRoute()
 const productId = route.params.id as string
 
@@ -25,30 +26,49 @@ useHead({
 </script>
 
 <template>
-  <ui-loading v-if="pending"/>
+  <div class="h-full py-6 lg:py-8">
+    <ui-loading v-if="pending"/>
 
-  <div v-else-if="product" class="container">
-    <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
-      <img :src="product.image" :alt="product.title" class="aspect-square object-contain">
+    <div v-else-if="product" class="container">
 
-      <div class="flex flex-col items-start sm:pl-6 lg:pl-8 sm:border-l sm:border-gray-200">
-        <h1 class="mb-4 sm:mb-6 lg:mb-8 heading-1">{{ product.title }}</h1>
-        <div class="flex flex-col gap-4">
-          <p class="text-base">{{ product.description }}</p>
-          <p class="font-medium text-2xl">${{ product.price }}</p>
-          <div class="flex items-center gap-1">
-            <div v-for="star in stars" :key="star">
-              <div v-if="roundedRating >= star"
-                   class="h-5 w-5 flex-shrink-0 text-yellow-500 i-ph:star-fill"/>
-              <div v-else class="h-5 w-5 flex-shrink-0 text-yellow-500 i-ph:star-light"/>
+      <div class="flex items justify-between gap-2 mb-4">
+        <button class="link" @click="router.back()">
+          <span class="i-ph:arrow-left-light h-4 w-4 flex-shrink-0"></span>
+          Back
+        </button>
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
+        <img
+          :src="product.image"
+          :alt="product.title"
+          class="w-full h-full aspect-square object-contain"
+        >
+
+        <div class="flex flex-col items-start lg:pl-8 lg:border-l lg:border-gray-200">
+          <h1 class="mb-4 lg:mb-8 heading-1">{{ product.title }}</h1>
+          <div class="flex flex-col gap-4">
+            <p class="text-base">{{ product.description }}</p>
+            <div class="flex items-center gap-1">
+              <div v-for="star in stars" :key="star">
+                <div
+                  v-if="roundedRating >= star"
+                  class="h-5 w-5 flex-shrink-0 text-yellow-500 i-ph:star-fill"
+                />
+                <div v-else class="h-5 w-5 flex-shrink-0 text-yellow-500 i-ph:star-light"/>
+              </div>
+              <span class="text-sm">
+                {{product.rating.count}} reviews
+              </span>
             </div>
+            <p class="heading-2">${{ product.price }}</p>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <ui-error-message v-else>{{ error }}</ui-error-message>
+    <ui-error-message v-else>{{ error }}</ui-error-message>
+  </div>
 </template>
 
 <style scoped>
