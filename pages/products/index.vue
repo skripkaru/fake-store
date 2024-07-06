@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {useProductStore} from '~/store/product'
-import {onMounted} from 'vue'
 
 const productStore = useProductStore()
 const {
@@ -23,7 +22,6 @@ onMounted(() => {
   fetchProducts()
   fetchCategories()
 })
-
 
 const formattedCategories = computed(() => categories.value.map((category) => category.charAt(0).toUpperCase() + category.slice(1)))
 

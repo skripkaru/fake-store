@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import {useCartStore} from "~/store/cart";
 
+const cartStore = useCartStore()
+const {totalItems} = storeToRefs(cartStore)
 </script>
 
 <template>
@@ -25,7 +28,7 @@
           <ui-button-icon to="/cart" class="relative">
             <div class="i-ph:bag-light h-6 w-6 flex-shrink-0"></div>
             <span class="absolute -top-2 -right-2 text-xs font-medium text-gray-700">
-              0
+              {{totalItems}}
             </span>
           </ui-button-icon>
 <!--          </nuxt-link>-->

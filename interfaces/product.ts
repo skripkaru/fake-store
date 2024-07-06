@@ -6,6 +6,7 @@ export interface Product {
   description: string
   image: string
   rating: ProductRating
+  quantity?: number
 }
 
 interface ProductRating {

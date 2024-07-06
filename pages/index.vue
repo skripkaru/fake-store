@@ -8,7 +8,7 @@ useHead({
   <div class="container">
     <div class="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-16 py-16">
       <div>
-        <h1 class="text-4xl font-semibold sm:text-6xl mb-4">
+        <h1 class="heading-1 mb-4">
           Summer styles are finally here
         </h1>
         <p class="mb-8 text-lg sm:text-xl text-gray-500">
