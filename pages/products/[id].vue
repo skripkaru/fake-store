@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import {useProductStore} from "~/store/product";
+import {useCartStore} from "~/store/cart";
 
 const productStore = useProductStore()
 const {
   product,
   pending,
-  error
 } = storeToRefs(productStore)
 const {fetchProduct} = productStore
+
+const cartStore = useCartStore()
+const {addProductToCart, incrementQuantity, decrementQuantity, findProductById} = cartStore
 
 const router = useRouter()
 const route = useRoute()
@@ -16,7 +19,12 @@ const productId = route.params.id as string
 const stars = computed<number[]>(() => Array(5).fill(undefined).map((_, index) => index + 1))
 const roundedRating = computed(() => Math.round(product.value?.rating.rate ?? 0));
 
-onMounted(async () => {
+const productQuantity = computed(() => {
+  const item = findProductById(Number(productId));
+  return item ? item.quantity! : 0;
+});
+
+useAsyncData(async () => {
   await fetchProduct(productId)
 })
 
@@ -26,19 +34,15 @@ useHead({
 </script>
 
 <template>
-  <div class="h-full py-6 lg:py-8">
-    <ui-loading v-if="pending"/>
+  <div v-loading="pending" class="container mx-auto">
+    <template v-if="product">
+      <el-page-header @back="router.back()" class="mb-4">
+        <template #content>
+          <h1>{{ product.title }}</h1>
+        </template>
+      </el-page-header>
 
-    <div v-else-if="product" class="container">
-
-      <div class="flex items justify-between gap-2 mb-4">
-        <button class="link" @click="router.back()">
-          <span class="i-ph:arrow-left-light h-4 w-4 flex-shrink-0"></span>
-          Back
-        </button>
-      </div>
-
-      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4">
         <img
           :src="product.image"
           :alt="product.title"
@@ -46,8 +50,8 @@ useHead({
         >
 
         <div class="flex flex-col items-start lg:pl-8 lg:border-l lg:border-gray-200">
-          <h1 class="mb-4 lg:mb-8 heading-1">{{ product.title }}</h1>
-          <div class="flex flex-col gap-4">
+          <h1 class="mb-4 text-4xl">{{ product.title }}</h1>
+          <div class="flex flex-col gap-4 mb-4">
             <p class="text-base">{{ product.description }}</p>
             <div class="flex items-center gap-1">
               <div v-for="star in stars" :key="star">
@@ -61,13 +65,24 @@ useHead({
                 {{product.rating.count}} reviews
               </span>
             </div>
-            <p class="heading-2">${{ product.price }}</p>
+            <p class="text-2xl">${{ product.price }}</p>
           </div>
+
+          <div v-if="productQuantity" class="grid grid-cols-[auto_32px_auto] items-center justify-between gap-1 p-1 rounded-sm border border-gray-200">
+            <el-button @click="decrementQuantity(product.id)" link>
+              <div class="i-ph:minus-light h-4 w-4"></div>
+            </el-button>
+            <span class="text-sm text-center">{{productQuantity}}</span>
+            <el-button @click="incrementQuantity(product.id)" link>
+              <div class="i-ph:plus-light h-4 w-4"></div>
+            </el-button>
+          </div>
+          <el-button v-else @click="addProductToCart(product)">
+            Add to cart
+          </el-button>
         </div>
       </div>
-    </div>
-
-    <ui-error-message v-else>{{ error }}</ui-error-message>
+    </template>
   </div>
 </template>
 

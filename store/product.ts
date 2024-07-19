@@ -1,9 +1,9 @@
 import {defineStore} from 'pinia'
 import type {Product} from "~/interfaces/product";
+import {useApi} from "~/services/api";
 
 export const useProductStore = defineStore('product', () => {
-  const runtimeConfig = useRuntimeConfig()
-  const apiUrl = runtimeConfig.public.apiBase
+  const {getProducts, getProductById, getCategories, getProductByCategory} = useApi()
 
   // State
   const products = ref<Product[]>([])
@@ -18,16 +18,10 @@ export const useProductStore = defineStore('product', () => {
   // Actions
   const fetchProducts = async () => {
     try {
-      const response = await $fetch<Product[]>(`${apiUrl}/products`, {
-        params: {
-          limit: limit.value,
-          sort: sort.value
-        }
+      products.value = await getProducts({
+        limit: limit.value,
+        sort: sort.value
       })
-
-      if (response) {
-        products.value = response
-      }
     } catch (e) {
       error.value = e
     } finally {
@@ -37,11 +31,7 @@ export const useProductStore = defineStore('product', () => {
 
   const fetchProduct = async (id: string) => {
     try {
-      const response = await $fetch<Product>(`${apiUrl}/products/${id}`)
-
-      if (response) {
-        product.value = response
-      }
+      product.value = await getProductById(id)
     } catch (e) {
       error.value = e
     } finally {
@@ -51,11 +41,7 @@ export const useProductStore = defineStore('product', () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await $fetch<string[]>(`${apiUrl}/products/categories`)
-
-      if (response) {
-        categories.value = response
-      }
+      categories.value = await getCategories()
     } catch (e) {
       error.value = e
     } finally {
@@ -63,18 +49,13 @@ export const useProductStore = defineStore('product', () => {
     }
   }
 
-  const fetchProductsByCategory = async (category: string) => {
+  const fetchProductsByCategory = async (selectedCategory: string) => {
     try {
-      const response = await $fetch<Product[]>(`${apiUrl}/products/category/${category}`, {
-        params: {
-          limit: limit.value,
-          sort: sort.value
-        }
+      category.value = selectedCategory
+      products.value = await getProductByCategory(selectedCategory, {
+        limit: limit.value,
+        sort: sort.value
       })
-
-      if (response) {
-        products.value = response
-      }
     } catch (e) {
       error.value = e
     } finally {
@@ -82,11 +63,17 @@ export const useProductStore = defineStore('product', () => {
     }
   }
 
-  const changeSort = () => {
+  const changeSort = async () => {
     sort.value = sort.value === 'desc' ? 'asc' : 'desc'
   }
 
-  watch([limit, sort], fetchProducts)
+  watchEffect(async () => {
+    if (category.value) {
+      await fetchProductsByCategory(category.value);
+    } else {
+      await fetchProducts();
+    }
+  });
 
   // Getters
 

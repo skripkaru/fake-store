@@ -12,6 +12,7 @@ export default defineNuxtConfig({
 
   modules: [
     '@unocss/nuxt',
+    '@element-plus/nuxt',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
   ],
