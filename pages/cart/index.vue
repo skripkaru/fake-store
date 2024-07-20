@@ -25,7 +25,7 @@ useHead({
 
       <template #extra>
         <el-button @click="clearCart">
-          Clear cart
+          Clear
         </el-button>
       </template>
     </el-page-header>
@@ -43,13 +43,13 @@ useHead({
           </nuxt-link>
 
           <div>
-            <nuxt-link :to="`/products/${item.id}`" class="heading-3">{{ item.title }}</nuxt-link>
+            <nuxt-link :to="`/products/${item.id}`" class="text-base">{{ item.title }}</nuxt-link>
             <p class="text-sm text-gray-500">{{ item.category }}</p>
           </div>
 
-          <p class="heading-4 lg:mt-auto lg:ml-auto">{{ item.quantity }} x ${{ item.price }}</p>
+          <p class="text-base lg:mt-auto lg:ml-auto">{{ item.quantity }} x ${{ item.price }}</p>
 
-          <el-button @click="removeProductFromCart(item.id)" class="absolute right-0 top-4" text>
+          <el-button @click="removeProductFromCart(item.id)" class="absolute right-0 top-4" link>
             <div class="i-ph:trash-light h-5 w-5"></div>
           </el-button>
         </li>
@@ -57,7 +57,7 @@ useHead({
     </div>
     <div class="border-t border-gray-200 py-6">
       <div class="flex items-center justify-end">
-        <p class="heading-2">Total: ${{ Math.round(totalPrice) }}</p>
+        <p class="text-base lg:text-lg">Total: ${{ Math.round(totalPrice) }}</p>
       </div>
     </div>
   </div>
