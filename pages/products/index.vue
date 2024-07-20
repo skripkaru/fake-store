@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import {useProductStore} from '~/store/product'
+import {useProductsStore} from '~/store/products'
 
-const productStore = useProductStore()
+const productsStore = useProductsStore()
 const {
   products,
   categories,
   category,
   sort,
   pending,
-} = storeToRefs(productStore)
+} = storeToRefs(productsStore)
 const {
   fetchProducts,
   fetchCategories,
   fetchProductsByCategory,
   changeSort,
-} = productStore
+} = productsStore
 
 const router = useRouter()
 

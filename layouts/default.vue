@@ -1,10 +1,21 @@
 <script setup lang="ts">
 import {useCartStore} from "~/store/cart";
+import {useAuthStore} from "~/store/auth";
 
 const router = useRouter()
 
 const cartStore = useCartStore()
 const {totalItems} = storeToRefs(cartStore)
+
+const authStore = useAuthStore()
+const {logUserOut} = authStore;
+const {authenticated} = storeToRefs(authStore);
+
+
+const logout = () => {
+  logUserOut();
+  router.push('/login');
+};
 
 useHead({
   htmlAttrs: {
@@ -24,28 +35,25 @@ useHead({
           <nuxt-link to="/" class="font-semibold text-lg sm:text-xl">
             Fake Store
           </nuxt-link>
-          <div class="flex items-center gap-2">
-            <!--          <el-button link>-->
-            <!--            Sign in-->
-            <!--          </el-button>-->
-            <el-button @click="router.push('/')" link>
+          <div class="flex items-center">
+            <el-button v-if="!authenticated" @click="router.push('/login')" link>
+              Sign in
+            </el-button>
+            <el-button v-if="authenticated" @click="router.push('/')" link>
               Home
             </el-button>
-            <el-button @click="router.push('/products')" link>
+            <el-button v-if="authenticated" @click="router.push('/products')" link>
               Shop
             </el-button>
-
-            <div class="w-px h-5 bg-gray-200"></div>
-
-            <el-button @click="router.push('/cart')" class="relative" link>
+            <el-button v-if="authenticated" @click="router.push('/cart')" class="relative" link>
               <div class="i-ph:bag-light h-6 w-6"></div>
               <span class="absolute -top-2 -right-2 text-xs font-medium text-gray-700">
               {{ totalItems }}
             </span>
             </el-button>
-            <!--          <el-button link>-->
-            <!--            <div class="i-ph:sign-out-light h-6 w-6"></div>-->
-            <!--          </el-button>-->
+            <el-button v-if="authenticated" link @click="logout">
+              <div class="i-ph:sign-out-light h-6 w-6"></div>
+            </el-button>
           </div>
         </div>
       </div>
@@ -68,13 +76,5 @@ html,
 body,
 #__nuxt {
   height: 100%;
-}
-
-.el-button + .el-button {
-  margin-left: 0;
-}
-
-.container {
-  width: 100%;
 }
 </style>

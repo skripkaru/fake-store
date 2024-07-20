@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import {useProductStore} from "~/store/product";
+import {useProductsStore} from "~/store/products";
 import {useCartStore} from "~/store/cart";
 
-const productStore = useProductStore()
+const productsStore = useProductsStore()
 const {
   product,
   pending,
-} = storeToRefs(productStore)
-const {fetchProduct} = productStore
+} = storeToRefs(productsStore)
+const {fetchProduct} = productsStore
 
 const cartStore = useCartStore()
 const {addProductToCart, incrementQuantity, decrementQuantity, findProductById} = cartStore

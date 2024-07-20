@@ -1,11 +1,10 @@
 import {defineStore} from 'pinia'
 import type {Product} from "~/interfaces/product";
-import {useApi} from "~/composables/use-api";
+import {useProductsService} from "~/services/products";
 
-export const useProductStore = defineStore('product', () => {
-  const {getProducts, getProductById, getCategories, getProductByCategory} = useApi()
+export const useProductsStore = defineStore('product', () => {
+  const {getProducts, getProductById, getCategories, getProductByCategory} = useProductsService()
 
-  // State
   const products = ref<Product[]>([])
   const product = ref<Product | null>(null)
   const categories = ref<string[]>([])
@@ -15,7 +14,6 @@ export const useProductStore = defineStore('product', () => {
   const pending = ref<boolean>(true)
   const error = ref<any>(null)
 
-  // Actions
   const fetchProducts = async () => {
     try {
       products.value = await getProducts({
@@ -74,8 +72,6 @@ export const useProductStore = defineStore('product', () => {
       await fetchProducts();
     }
   });
-
-  // Getters
 
   return {
     products,

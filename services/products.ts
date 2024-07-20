@@ -2,7 +2,7 @@ import type {Product} from "~/interfaces/product";
 import type {ApiError} from "~/interfaces/error";
 import {handleError} from "~/utils/handle-error";
 
-export const useApi = () => {
+export const useProductsService = () => {
   const runtimeConfig = useRuntimeConfig()
   const apiUrl = runtimeConfig.public.apiBase
 
