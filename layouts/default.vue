@@ -21,7 +21,7 @@ useHead({
     <el-header class="w-full py-4 border-b border-gray-200">
       <div class="h-full container mx-auto">
         <div class="h-full flex items-center justify-between">
-          <nuxt-link to="/" class="font-semibold text-lg sm:text-xl md:text-2xl">
+          <nuxt-link to="/" class="font-semibold text-lg sm:text-xl">
             Fake Store
           </nuxt-link>
           <div class="flex items-center gap-2">
@@ -39,7 +39,7 @@ useHead({
 
             <el-button @click="router.push('/cart')" class="relative" link>
               <div class="i-ph:bag-light h-6 w-6"></div>
-              <span class="absolute -top-1 -right-1 text-xs font-medium text-gray-700">
+              <span class="absolute -top-2 -right-2 text-xs font-medium text-gray-700">
               {{ totalItems }}
             </span>
             </el-button>

@@ -20,7 +20,7 @@ useHead({
   <div v-else class="container mx-auto">
     <el-page-header @back="router.back()" class="mb-4">
       <template #content>
-        <h1>Shopping cart</h1>
+        <h1 class="text-base lg:text-lg">Shopping cart</h1>
       </template>
 
       <template #extra>

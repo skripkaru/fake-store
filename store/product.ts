@@ -1,16 +1,16 @@
 import {defineStore} from 'pinia'
 import type {Product} from "~/interfaces/product";
-import {useApi} from "~/services/api";
+import {useApi} from "~/composables/use-api";
 
 export const useProductStore = defineStore('product', () => {
   const {getProducts, getProductById, getCategories, getProductByCategory} = useApi()
 
   // State
   const products = ref<Product[]>([])
-  const product = ref<Product>()
+  const product = ref<Product | null>(null)
   const categories = ref<string[]>([])
   const category = ref<string>('')
-  const limit = ref<number>(8)
+  const limit = ref<number>(12)
   const sort = ref<string>('')
   const pending = ref<boolean>(true)
   const error = ref<any>(null)
@@ -90,7 +90,7 @@ export const useProductStore = defineStore('product', () => {
     fetchProduct,
     fetchCategories,
     fetchProductsByCategory,
-    changeSort
+    changeSort,
   }
 })
 

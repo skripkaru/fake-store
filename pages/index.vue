@@ -10,7 +10,7 @@ useHead({
   <div class="container mx-auto">
     <div class="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-16 py-16">
       <div>
-        <h1 class="text-4xl mb-4">
+        <h1 class="text-2xl lg:text-4xl mb-4">
           Summer styles are finally here
         </h1>
         <p class="mb-8 text-gray-500">

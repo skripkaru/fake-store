@@ -24,9 +24,7 @@ const productQuantity = computed(() => {
   return item ? item.quantity! : 0;
 });
 
-useAsyncData(async () => {
-  await fetchProduct(productId)
-})
+await useAsyncData('product', () => fetchProduct(productId).then(() => true))
 
 useHead({
   title: () => product.value?.title as string,
@@ -38,7 +36,7 @@ useHead({
     <template v-if="product">
       <el-page-header @back="router.back()" class="mb-4">
         <template #content>
-          <h1>{{ product.title }}</h1>
+          <h1 class="text-base lg:text-lg line-clamp-1">{{ product.title }}</h1>
         </template>
       </el-page-header>
 
@@ -50,7 +48,7 @@ useHead({
         >
 
         <div class="flex flex-col items-start lg:pl-8 lg:border-l lg:border-gray-200">
-          <h1 class="mb-4 text-4xl">{{ product.title }}</h1>
+          <h1 class="mb-4 text-2xl lg:text-4xl">{{ product.title }}</h1>
           <div class="flex flex-col gap-4 mb-4">
             <p class="text-base">{{ product.description }}</p>
             <div class="flex items-center gap-1">
