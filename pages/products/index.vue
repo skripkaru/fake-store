@@ -27,6 +27,8 @@ await useAsyncData('categories', () => fetchCategories().then(() => true), {
   lazy: true,
 })
 
+const toggleFilter = ref(false)
+
 useHead({
   title: 'Products'
 })
@@ -40,30 +42,19 @@ useHead({
       </template>
 
       <template #extra>
-        <el-button-group>
-          <el-button @click="sortProducts('price', 'desc')">
+        <div class="flex items-center gap-2">
+          <el-button @click="toggleFilter = true" link>
+            <div class="i-ph:funnel-light w-6 h-6"></div>
+          </el-button>
+          <el-button @click="sortProducts('price', 'desc')" link>
             <div class="i-ph:sort-descending-light w-6 h-6"></div>
           </el-button>
-          <el-button @click="sortProducts('price', 'asc')">
+          <el-button @click="sortProducts('price', 'asc')" link>
             <div class="i-ph:sort-ascending-light w-6 h-6"></div>
           </el-button>
-        </el-button-group>
+        </div>
       </template>
     </el-page-header>
-
-    <div v-if="categories.length" class="flex flex-wrap items-center gap-1 mb-4">
-      <el-button @click="setCategory('')">
-        All
-      </el-button>
-
-      <el-button
-        v-for="category in categories"
-        :key="category.slug"
-        @click="setCategory(category.slug)"
-      >
-        {{ category.name }}
-      </el-button>
-    </div>
 
     <div v-if="products.length" class="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-4 mb-4">
       <el-card v-for="product in products" :key="product.id" shadow="hover">
@@ -86,6 +77,23 @@ useHead({
       />
     </div>
 
+    <el-drawer v-model="toggleFilter" title="Filters" class="!w-full !sm:w-1/2 !lg:w-1/3">
+      <div class="grid gap-4">
+        <div v-if="categories.length" class="flex flex-wrap items-center gap-1">
+          <el-button @click="setCategory('')">
+            All
+          </el-button>
+
+          <el-button
+            v-for="category in categories"
+            :key="category.slug"
+            @click="setCategory(category.slug)"
+          >
+            {{ category.name }}
+          </el-button>
+        </div>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
