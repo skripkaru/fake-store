@@ -1,4 +1,4 @@
-import type {Product} from "~/interfaces/product";
+import type {ProductResponse, Product, Category} from "~/interfaces/product";
 import type {ApiError} from "~/interfaces/error";
 import {handleError} from "~/utils/handle-error";
 
@@ -6,42 +6,51 @@ export const useProductsService = () => {
   const runtimeConfig = useRuntimeConfig()
   const apiUrl = runtimeConfig.public.apiBase
 
-  const getProducts = async (params: { limit: number; sort: string }): Promise<Product[]> => {
+  const getProducts = async (params: {
+    limit: number;
+    skip: number,
+    sortBy: string,
+    order: string
+  }): Promise<ProductResponse> => {
     try {
-      return await $fetch<Product[]>(`${apiUrl}/products`, {params}) || []
+      return await $fetch<ProductResponse>(`${apiUrl}/products`, {
+        params
+      })
     } catch (error: unknown) {
       handleError(error as ApiError)
-      return []
+      throw error;
     }
   }
 
-  const getProductById = async (id: string): Promise<Product | null> => {
+  const getProductById = async (id: string): Promise<Product> => {
     try {
-      return await $fetch<Product>(`${apiUrl}/products/${id}`) || null
+      return await $fetch<Product>(`${apiUrl}/products/${id}`)
     } catch (error) {
       handleError(error as ApiError)
-      return null
+      throw error;
     }
   }
 
-  const getCategories = async (): Promise<string[]> => {
+  const getCategories = async (): Promise<Category[]> => {
     try {
-      return await $fetch<string[]>(`${apiUrl}/products/categories`) || []
+      return await $fetch<Category[]>(`${apiUrl}/products/categories`)
     } catch (error) {
       handleError(error as ApiError)
-      return []
+      throw error;
     }
   }
 
-  const getProductByCategory = async (category: string, params: {
+  const getProductsByCategory = async (category: string, params: {
     limit: number;
-    sort: string
-  }): Promise<Product[]> => {
+    skip: number,
+    sortBy: string,
+    order: string
+  }): Promise<ProductResponse> => {
     try {
-      return await $fetch<Product[]>(`${apiUrl}/products/category/${category}`, {params}) || []
+      return await $fetch<ProductResponse>(`${apiUrl}/products/category/${category}`, {params})
     } catch (error) {
       handleError(error as ApiError)
-      return []
+      throw error;
     }
   }
 
@@ -49,6 +58,6 @@ export const useProductsService = () => {
     getProducts,
     getProductById,
     getCategories,
-    getProductByCategory,
+    getProductsByCategory,
   }
 }

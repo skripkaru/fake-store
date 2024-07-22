@@ -17,7 +17,7 @@ const route = useRoute()
 const productId = route.params.id as string
 
 const stars = computed<number[]>(() => Array(5).fill(undefined).map((_, index) => index + 1))
-const roundedRating = computed(() => Math.round(product.value?.rating.rate ?? 0));
+const roundedRating = computed(() => Math.round(product.value?.rating ?? 0));
 
 const productQuantity = computed(() => {
   const item = findProductById(Number(productId));
@@ -42,7 +42,7 @@ useHead({
 
       <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4">
         <img
-          :src="product.image"
+          :src="product.images[0]"
           :alt="product.title"
           class="w-full h-full aspect-square object-contain"
         >
@@ -60,7 +60,7 @@ useHead({
                 <div v-else class="h-5 w-5 flex-shrink-0 text-yellow-500 i-ph:star-light"/>
               </div>
               <span class="text-sm">
-                {{product.rating.count}} reviews
+                {{product.reviews.length}} reviews
               </span>
             </div>
             <p class="text-2xl">${{ product.price }}</p>

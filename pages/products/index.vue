@@ -5,27 +5,27 @@ const productsStore = useProductsStore()
 const {
   products,
   categories,
-  category,
-  sort,
+  page,
+  limit,
+  total,
   pending,
 } = storeToRefs(productsStore)
 const {
   fetchProducts,
   fetchCategories,
-  fetchProductsByCategory,
-  changeSort,
+  setCategory,
+  sortProducts,
+  setPage
 } = productsStore
 
 const router = useRouter()
 
-await useAsyncData('products', () => fetchProducts().then(() => true))
-await useAsyncData('categories', () => fetchCategories().then(() => true))
-
-const formattedCategories = computed(() => categories.value.map((category) => category.charAt(0).toUpperCase() + category.slice(1)))
-
-const resetCategory = () => {
-  category.value = ''
-}
+await useAsyncData('products', () => fetchProducts().then(() => true), {
+  lazy: true,
+})
+await useAsyncData('categories', () => fetchCategories().then(() => true), {
+  lazy: true,
+})
 
 useHead({
   title: 'Products'
@@ -40,38 +40,50 @@ useHead({
       </template>
 
       <template #extra>
-        <el-button @click="changeSort" link>
-          <div
-            class="h-6 w-6"
-            :class="sort === 'asc' ? 'i-ph:sort-ascending-light' : 'i-ph:sort-descending-light'"
-          />
-        </el-button>
+        <el-button-group>
+          <el-button @click="sortProducts('price', 'desc')">
+            <div class="i-ph:sort-descending-light w-6 h-6"></div>
+          </el-button>
+          <el-button @click="sortProducts('price', 'asc')">
+            <div class="i-ph:sort-ascending-light w-6 h-6"></div>
+          </el-button>
+        </el-button-group>
       </template>
     </el-page-header>
 
     <div v-if="categories.length" class="flex flex-wrap items-center gap-1 mb-4">
-      <el-button @click="resetCategory">
+      <el-button @click="setCategory('')">
         All
       </el-button>
 
       <el-button
-        v-for="category in formattedCategories"
-        :key="category"
-        @click="fetchProductsByCategory(category.toLowerCase())"
+        v-for="category in categories"
+        :key="category.slug"
+        @click="setCategory(category.slug)"
       >
-        {{ category }}
+        {{ category.name }}
       </el-button>
     </div>
 
-    <div v-if="products.length" class="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-4">
+    <div v-if="products.length" class="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-4 mb-4">
       <el-card v-for="product in products" :key="product.id" shadow="hover">
         <nuxt-link :to="`/products/${product.id}`" class="block mb-4">
-          <img :src="product.image" :alt="product.title" class="aspect-square object-contain">
+          <img :src="product.images[0]" :alt="product.title" class="aspect-square object-contain">
         </nuxt-link>
         <h4 class="text-sm lg:text-lg line-clamp-1">{{ product.title }}</h4>
-        <p class="mb-2 text-xs lg:text-sm text-gray-500">{{ product.category.charAt(0).toUpperCase() + product.category.slice(1) }}</p>
+        <p class="mb-2 text-xs lg:text-sm text-gray-500">{{ product.brand }}</p>
         <p class="text-sm lg:text-lg">${{ product.price }}</p>
       </el-card>
+    </div>
+
+    <div v-if="products.length">
+      <el-pagination
+        layout="prev, pager, next"
+        :current-page="page"
+        :page-size="limit"
+        :total="total"
+        @current-change="setPage"
+      />
     </div>
 
   </div>

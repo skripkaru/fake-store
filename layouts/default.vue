@@ -35,7 +35,7 @@ useHead({
           <nuxt-link to="/" class="font-semibold text-lg sm:text-xl">
             Fake Store
           </nuxt-link>
-          <div class="flex items-center">
+          <div class="flex items-center gap-3">
             <el-button v-if="!authenticated" @click="router.push('/login')" link>
               Sign in
             </el-button>
@@ -76,5 +76,9 @@ html,
 body,
 #__nuxt {
   height: 100%;
+}
+
+.el-button+.el-button {
+  margin-left: 0;
 }
 </style>
