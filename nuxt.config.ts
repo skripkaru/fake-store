@@ -2,9 +2,9 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  app: {
-    pageTransition: { name: 'page', mode: 'out-in' },
-  },
+  // app: {
+  //   pageTransition: { name: 'page', mode: 'out-in' },
+  // },
 
   css: [
     '@unocss/reset/tailwind.css',

@@ -5,15 +5,18 @@ const productsStore = useProductsStore()
 const {
   products,
   categories,
+  selectedCategory,
   page,
   limit,
   total,
   pending,
+  searchQuery,
+  sortValue,
+  sortOptions
 } = storeToRefs(productsStore)
 const {
   fetchProducts,
   fetchCategories,
-  setCategory,
   sortProducts,
   setPage
 } = productsStore
@@ -21,13 +24,27 @@ const {
 const router = useRouter()
 
 await useAsyncData('products', () => fetchProducts().then(() => true), {
-  lazy: true,
+  lazy: true
 })
 await useAsyncData('categories', () => fetchCategories().then(() => true), {
-  lazy: true,
+  lazy: true
 })
 
-const toggleFilter = ref(false)
+const showFilters = ref(false)
+
+const toggleFilters = () => {
+  showFilters.value = !showFilters.value
+}
+
+const applyFilters = () => {
+  fetchProducts()
+  toggleFilters()
+}
+
+const resetFilters = () => {
+  selectedCategory.value = ''
+  toggleFilters()
+}
 
 useHead({
   title: 'Products'
@@ -40,34 +57,48 @@ useHead({
       <template #content>
         <h1 class="text-base lg:text-lg">Shop</h1>
       </template>
-
       <template #extra>
         <div class="flex items-center gap-2">
-          <el-button @click="toggleFilter = true" link>
+          <el-select
+            style="width: 96px"
+            v-model="sortValue"
+            placeholder="Sort by"
+            @change="sortProducts(sortValue)"
+          >
+            <el-option
+              v-for="item in sortOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+
+          <el-button @click="toggleFilters" link>
             <div class="i-ph:funnel-light w-6 h-6"></div>
-          </el-button>
-          <el-button @click="sortProducts('price', 'desc')" link>
-            <div class="i-ph:sort-descending-light w-6 h-6"></div>
-          </el-button>
-          <el-button @click="sortProducts('price', 'asc')" link>
-            <div class="i-ph:sort-ascending-light w-6 h-6"></div>
           </el-button>
         </div>
       </template>
     </el-page-header>
 
-    <div v-if="products.length" class="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-4 mb-4">
-      <el-card v-for="product in products" :key="product.id" shadow="hover">
-        <nuxt-link :to="`/products/${product.id}`" class="block mb-4">
-          <img :src="product.images[0]" :alt="product.title" class="aspect-square object-contain">
-        </nuxt-link>
-        <h4 class="text-sm lg:text-lg line-clamp-1">{{ product.title }}</h4>
-        <p class="mb-2 text-xs lg:text-sm text-gray-500">{{ product.brand }}</p>
-        <p class="text-sm lg:text-lg">${{ product.price }}</p>
-      </el-card>
-    </div>
+    <el-input v-model="searchQuery" placeholder="Search" class="mb-4"/>
 
-    <div v-if="products.length">
+    <el-empty v-if="!products.length" description="Products not found">
+      <el-button @click="router.push('/products')">Go to shop</el-button>
+    </el-empty>
+    <template v-else>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-4 mb-4">
+        <el-card v-for="product in products" :key="product.id" shadow="hover">
+          <nuxt-link :to="`/products/${product.id}`" class="block aspect-square">
+            <img v-if="product.images.length" :src="product.images[0]" :alt="product.title"
+                 class="w-full h-full object-contain">
+            <div v-else class="w-full h-full bg-gray-200"></div>
+          </nuxt-link>
+          <h4 class="text-sm lg:text-lg line-clamp-1">{{ product.title }}</h4>
+          <p class="mb-2 text-xs lg:text-sm text-gray-500">{{ product.brand }}</p>
+          <p class="text-sm lg:text-lg">${{ product.price }}</p>
+        </el-card>
+      </div>
+
       <el-pagination
         layout="prev, pager, next"
         :current-page="page"
@@ -75,24 +106,33 @@ useHead({
         :total="total"
         @current-change="setPage"
       />
-    </div>
+    </template>
 
-    <el-drawer v-model="toggleFilter" title="Filters" class="!w-full !sm:w-1/2 !lg:w-1/3">
+    <el-drawer v-model="showFilters" title="Filters" class="!w-full !sm:w-1/2 !lg:w-1/3">
       <div class="grid gap-4">
-        <div v-if="categories.length" class="flex flex-wrap items-center gap-1">
-          <el-button @click="setCategory('')">
-            All
-          </el-button>
-
-          <el-button
-            v-for="category in categories"
-            :key="category.slug"
-            @click="setCategory(category.slug)"
-          >
-            {{ category.name }}
-          </el-button>
+        <div>
+          <p class="mb-2">Categories</p>
+          <el-radio-group v-model="selectedCategory" class="w-full flex flex-col !items-start">
+            <el-radio
+              v-for="category in categories"
+              :key="category.slug"
+              :value="category.slug"
+            >
+             {{category.name}}
+            </el-radio>
+          </el-radio-group>
         </div>
       </div>
+      <template #footer>
+        <div class="flex items-center justify-between gap-2">
+          <el-button @click="resetFilters">
+            Reset
+          </el-button>
+          <el-button type="primary" @click="applyFilters">
+            Apply
+          </el-button>
+        </div>
+      </template>
     </el-drawer>
   </div>
 </template>

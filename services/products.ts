@@ -54,10 +54,26 @@ export const useProductsService = () => {
     }
   }
 
+  const searchProducts = async (params: {
+    limit: number;
+    skip: number,
+    sortBy: string,
+    order: string
+    q: string
+  }): Promise<ProductResponse> => {
+    try {
+      return await $fetch<ProductResponse>(`${apiUrl}/products/search`, {params})
+    } catch (error) {
+      handleError(error as ApiError)
+      throw error;
+    }
+  }
+
   return {
     getProducts,
     getProductById,
     getCategories,
     getProductsByCategory,
+    searchProducts
   }
 }
