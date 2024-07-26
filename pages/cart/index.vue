@@ -39,12 +39,12 @@ useHead({
           class="relative grid grid-cols-1 lg:grid-cols-[auto_1fr_160px] gap-4 py-4"
         >
           <nuxt-link :to="`/products/${item.id}`" class="h-24 w-24">
-            <img :src="item.image" :alt="item.title" class="h-full w-full aspect-square object-contain">
+            <img :src="item.images[0]" :alt="item.title" class="h-full w-full aspect-square object-contain">
           </nuxt-link>
 
           <div>
             <nuxt-link :to="`/products/${item.id}`" class="text-base">{{ item.title }}</nuxt-link>
-            <p class="text-sm text-gray-500">{{ item.category }}</p>
+            <p class="text-sm text-gray-500">{{ item.brand }}</p>
           </div>
 
           <p class="text-base lg:mt-auto lg:ml-auto">{{ item.quantity }} x ${{ item.price }}</p>
@@ -57,7 +57,7 @@ useHead({
     </div>
     <div class="border-t border-gray-200 py-6">
       <div class="flex items-center justify-end">
-        <p class="text-base lg:text-lg">Total: ${{ Math.round(totalPrice) }}</p>
+        <p class="text-base lg:text-lg">Total: ${{ totalPrice.toFixed(2) }}</p>
       </div>
     </div>
   </div>

@@ -29,13 +29,13 @@ useHead({
 
 <template>
   <el-container class="h-full">
-    <el-header class="w-full py-4 border-b border-gray-200">
+    <el-header class="sticky top-0 z-10 w-full py-4 border-b border-gray-200 bg-white">
       <div class="h-full container mx-auto">
         <div class="h-full flex items-center justify-between">
           <nuxt-link to="/" class="font-semibold text-lg sm:text-xl">
             Fake Store
           </nuxt-link>
-          <div class="flex items-center">
+          <div class="flex items-center gap-3">
             <el-button v-if="!authenticated" @click="router.push('/login')" link>
               Sign in
             </el-button>
@@ -58,7 +58,7 @@ useHead({
         </div>
       </div>
     </el-header>
-    <el-main>
+    <el-main class="!overflow-initial">
       <slot></slot>
     </el-main>
     <el-footer class="w-full py-4">
@@ -76,5 +76,9 @@ html,
 body,
 #__nuxt {
   height: 100%;
+}
+
+.el-button+.el-button {
+  margin-left: 0;
 }
 </style>

@@ -7,8 +7,8 @@ const {authenticateUser} = authStore;
 const {authenticated} = storeToRefs(authStore);
 
 const user = ref({
-  username: 'mor_2314',
-  password: '83r5^_',
+  username: 'emilys',
+  password: 'emilyspass',
 });
 const router = useRouter();
 
