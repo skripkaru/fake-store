@@ -6,16 +6,9 @@ export const useProductsService = () => {
   const runtimeConfig = useRuntimeConfig()
   const apiUrl = runtimeConfig.public.apiBase
 
-  const getProducts = async (params: {
-    limit: number;
-    skip: number,
-    sortBy: string,
-    order: string
-  }): Promise<ProductResponse> => {
+  const getProducts = async (): Promise<ProductResponse> => {
     try {
-      return await $fetch<ProductResponse>(`${apiUrl}/products`, {
-        params
-      })
+      return await $fetch<ProductResponse>(`${apiUrl}/products?limit=0`)
     } catch (error: unknown) {
       handleError(error as ApiError)
       throw error;
@@ -40,14 +33,9 @@ export const useProductsService = () => {
     }
   }
 
-  const getProductsByCategory = async (category: string, params: {
-    limit: number;
-    skip: number,
-    sortBy: string,
-    order: string
-  }): Promise<ProductResponse> => {
+  const getProductsByCategory = async (category: string): Promise<ProductResponse> => {
     try {
-      return await $fetch<ProductResponse>(`${apiUrl}/products/category/${category}`, {params})
+      return await $fetch<ProductResponse>(`${apiUrl}/products/category/${category}`)
     } catch (error) {
       handleError(error as ApiError)
       throw error;

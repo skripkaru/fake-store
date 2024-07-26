@@ -57,7 +57,7 @@ useHead({
     </div>
     <div class="border-t border-gray-200 py-6">
       <div class="flex items-center justify-end">
-        <p class="text-base lg:text-lg">Total: ${{ Math.round(totalPrice) }}</p>
+        <p class="text-base lg:text-lg">Total: ${{ totalPrice.toFixed(2) }}</p>
       </div>
     </div>
   </div>

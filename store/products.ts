@@ -1,63 +1,34 @@
 import {defineStore} from 'pinia'
-import type {Category, Product} from "~/interfaces/product";
+import type {Product} from "~/interfaces/product";
 import {useProductsService} from "~/services/products";
 import {useDebounce} from '@vueuse/core'
 
 export const useProductsStore = defineStore('product', () => {
-  const {getProducts, getProductById, getCategories, getProductsByCategory, searchProducts} = useProductsService()
+  const {getProducts, getProductById} = useProductsService()
 
   const pending = ref<boolean>(false)
   const error = ref<any>(null)
   const products = ref<Product[]>([])
   const product = ref<Product | null>(null)
-  const categories = ref<Category[]>([])
-  const selectedCategory = ref<string>('')
   const page = ref<number>(1)
-  const limit = ref<number>(12)
-  const total = ref<number>(0)
-  const sortBy = ref<string>('')
+  const limit = ref<number>(10)
   const order = ref<string>('')
   const searchQuery = ref('')
   const debouncedSearchQuery = useDebounce(searchQuery, 300)
-  const sortValue = ref<any>('')
-  const sortOptions = ref([
-    {
-      value: 'price_desc',
-      label: 'Price ↑',
-    },
-    {
-      value: 'price_asc',
-      label: 'Price ↓',
-    },
-  ])
-
-  const setPage = (newPage: number) => {
-    page.value = newPage
-  }
+  const priceRange = ref<[number, number]>([0, 50000])
+  const categories = ref<string[]>([])
+  const selectedCategories = ref<string[]>([])
+  const brands = ref<string[]>([])
+  const selectedBrands = ref<string[]>([])
 
   const fetchProducts = async () => {
     pending.value = true
+    error.value = null
     try {
-      const params = {
-        limit: limit.value,
-        skip: (page.value - 1) * limit.value,
-        sortBy: sortBy.value,
-        order: order.value,
-        q: debouncedSearchQuery.value,
-      }
-
-      let response
-
-      if (selectedCategory.value) {
-        response = await getProductsByCategory(selectedCategory.value, params)
-      } else if (debouncedSearchQuery.value) {
-        response = await searchProducts(params)
-      } else {
-        response = await getProducts(params)
-      }
-
+      const response = await getProducts()
       products.value = response.products
-      total.value = response.total
+      extractCategories()
+      extractBrands()
     } catch (e) {
       error.value = e
     } finally {
@@ -67,10 +38,9 @@ export const useProductsStore = defineStore('product', () => {
 
   const fetchProduct = async (id: string) => {
     pending.value = true
+    error.value = null
     try {
-      const response = await getProductById(id)
-
-      product.value = response
+      product.value = await getProductById(id)
     } catch (e) {
       error.value = e
     } finally {
@@ -78,50 +48,90 @@ export const useProductsStore = defineStore('product', () => {
     }
   }
 
-  const fetchCategories = async () => {
-    pending.value = true
-    try {
-      const response = await getCategories()
+  const extractBrands = () => {
+    const brandNames = products.value
+      .map(product => product.brand)
+      .filter(brand => brand !== undefined && brand !== null)
+      .sort()
+    brands.value = Array.from(new Set(brandNames))
+  }
 
-      categories.value = response
-    } catch (e) {
-      error.value = e
-    } finally {
-      pending.value = false
+  const extractCategories = () => {
+    const categoryNames = products.value
+      .map(product => product.category)
+      .filter(category => category !== undefined && category !== null)
+      .sort()
+
+    categories.value = Array.from(new Set(categoryNames))
+  }
+
+  const changePage = (newPage: number) => {
+    page.value = newPage
+  }
+
+  const searchedProducts = computed(() => {
+    const query = debouncedSearchQuery.value.toLowerCase()
+
+    return products.value.filter(product => product.title.toLowerCase().includes(query))
+  })
+
+  const filteredProducts = computed(() => {
+    let filtered = [...searchedProducts.value]
+
+    if (selectedBrands.value.length) {
+      filtered = filtered.filter(product => selectedBrands.value.includes(product.brand))
     }
-  }
 
-  const sortProducts = (sortValue: string) => {
-   const [newSortBy, newOrder] = sortValue.split('_')
-    sortBy.value = newSortBy
-    order.value = newOrder
-    page.value = 1
-  }
+    if (selectedCategories.value.length) {
+      filtered = filtered.filter(product => selectedCategories.value.includes(product.category.toLowerCase()))
+    }
 
-  watch([page, sortBy, order, debouncedSearchQuery], fetchProducts, {
-    immediate: true
+    if (priceRange.value) {
+      const [minPrice, maxPrice] = priceRange.value
+      filtered = filtered.filter(product => product.price >= minPrice && product.price <= maxPrice)
+    }
+
+    return filtered
+  })
+
+  const sortedProducts = computed(() => {
+    let sortedFiltered = [...filteredProducts.value]
+
+    if (order.value === 'asc') {
+      sortedFiltered.sort((a, b) => a.price - b.price)
+    } else if (order.value === 'desc') {
+      sortedFiltered.sort((a, b) => b.price - a.price)
+    }
+
+    return sortedFiltered
+  })
+
+  const paginatedProducts = computed(() => {
+    const start = (page.value - 1) * limit.value
+    const end = start + limit.value
+    return sortedProducts.value.slice(start, end)
   })
 
   return {
-    products,
     product,
-    categories,
-    selectedCategory,
-    searchQuery,
-    sortBy,
-    sortValue,
-    sortOptions,
-    order,
+    products,
+    sortedProducts,
+    paginatedProducts,
     page,
     limit,
-    total,
+    order,
+    searchQuery,
+    debouncedSearchQuery,
+    priceRange,
+    brands,
+    selectedBrands,
+    categories,
+    selectedCategories,
     pending,
     error,
     fetchProducts,
     fetchProduct,
-    fetchCategories,
-    sortProducts,
-    setPage
+    changePage
   }
 })
 
